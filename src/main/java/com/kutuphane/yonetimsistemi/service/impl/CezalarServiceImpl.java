@@ -1,7 +1,6 @@
 package com.kutuphane.yonetimsistemi.service.impl;
 import com.kutuphane.yonetimsistemi.entity.Cezalar;
 import com.kutuphane.yonetimsistemi.repository.CezalarRepository;
-import com.kutuphane.yonetimsistemi.repository.KategoriRepository;
 import com.kutuphane.yonetimsistemi.service.CezalarService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

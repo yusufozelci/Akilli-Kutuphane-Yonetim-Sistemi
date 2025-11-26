@@ -1,4 +1,5 @@
 package com.kutuphane.yonetimsistemi.entity;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,6 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Kitap {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -22,22 +24,16 @@ public class Kitap {
     private String isbn;
 
     @Column(name = "yayin_yili")
-    private String yayinYili;
+    private Integer yayinYili;
 
-    @Column(name = "adet" , nullable = false)
-    private String adet;
-
-    @Column(name = "yazar_id" , nullable = false)
-    private String yazarId;
-
-    @Column(name = "kategori_id" , nullable = false)
-    private String kategoriId;
+    @Column(name = "adet", nullable = false)
+    private int adet;
 
     @ManyToOne
-    @JoinColumn(name = "yazar_id" , referencedColumnName = "id")
+    @JoinColumn(name = "yazar_id", referencedColumnName = "id")
     private Yazar yazar;
 
     @ManyToOne
-    @JoinColumn(name = "kategori_id" , referencedColumnName = "id")
+    @JoinColumn(name = "kategori_id", referencedColumnName = "id")
     private Kategori kategori;
 }
