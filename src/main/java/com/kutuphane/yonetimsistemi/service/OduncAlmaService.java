@@ -7,4 +7,5 @@ public interface OduncAlmaService {
     OduncAlma getById(int id);
     OduncAlma oduncVer(OduncAlma oduncAlma);
     OduncAlma kitapIadeEt(int oduncAlmaId);
+    void deleteById(int id);
 }

@@ -38,4 +38,9 @@ public class OduncAlmaServiceImpl implements OduncAlmaService {
 
         return oduncAlmaRepository.save(oduncAlma);
     }
+    @Override
+    public void deleteById(int id) {
+        OduncAlma oduncAlma = getById(id);
+        oduncAlmaRepository.delete(oduncAlma);
+    }
 }
