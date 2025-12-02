@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="tr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Akıllı Kütüphane - Yönetim Paneli</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        body { background-color: #f8f9fa; }
+        .card { border: none; border-radius: 15px; transition: transform 0.3s; }
+        .card:hover { transform: translateY(-5px); cursor: pointer; }
+        .icon-box { font-size: 3rem; margin-bottom: 15px; }
+        .hero-section { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 0 0 20px 20px; padding: 3rem 0; margin-bottom: 3rem;}
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
+    <div class="container">
+        <a class="navbar-brand fw-bold" href="/">
+            <i class="fa-solid fa-book-open-reader me-2"></i>Akıllı Kütüphane
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link active" href="/"><i class="fa-solid fa-house me-1"></i> Ana Sayfa</a></li>
+                <li class="nav-item"><a class="nav-link" href="/kitaplar">Kitaplar</a></li>
+                <li class="nav-item"><a class="nav-link" href="/kategoriler">Kategoriler</a></li>
+                <li class="nav-item"><a class="nav-link" href="/yazarlar">Yazarlar</a></li>
+                <li class="nav-item"><a class="nav-link" href="/kullanicilar">Üyeler</a></li>
+                <li class="nav-item"><a class="nav-link" href="/odunc">İşlemler</a></li>
+                <li class="nav-item"><a class="nav-link text-danger fw-bold" href="/cezalar">Cezalar</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="hero-section text-center shadow">
+    <div class="container">
+        <h1 class="display-4 fw-bold">Hoş Geldiniz</h1>
+        <p class="lead">Kütüphane envanterini, üyeleri ve ödünç işlemlerini tek bir yerden yönetin.</p>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row g-4 justify-content-center">
+
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100 shadow-sm p-4 text-center">
+                <div class="card-body">
+                    <div class="icon-box text-primary"><i class="fa-solid fa-book"></i></div>
+                    <h3 class="card-title h5">Kitap Yönetimi</h3>
+                    <p class="card-text small text-muted">Stok durumu ve kitap envanteri.</p>
+                    <a href="/kitaplar" class="btn btn-outline-primary w-100 mt-2">Git <i class="fa-solid fa-arrow-right"></i></a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100 shadow-sm p-4 text-center">
+                <div class="card-body">
+                    <div class="icon-box text-secondary"><i class="fa-solid fa-tags"></i></div>
+                    <h3 class="card-title h5">Kategoriler</h3>
+                    <p class="card-text small text-muted">Kitap türlerini düzenleyin.</p>
+                    <a href="/kategoriler" class="btn btn-outline-secondary w-100 mt-2">Git <i class="fa-solid fa-arrow-right"></i></a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100 shadow-sm p-4 text-center">
+                <div class="card-body">
+                    <div class="icon-box text-success"><i class="fa-solid fa-user-pen"></i></div>
+                    <h3 class="card-title h5">Yazarlar</h3>
+                    <p class="card-text small text-muted">Yazar ekleme ve düzenleme.</p>
+                    <a href="/yazarlar" class="btn btn-outline-success w-100 mt-2">Git <i class="fa-solid fa-arrow-right"></i></a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100 shadow-sm p-4 text-center">
+                <div class="card-body">
+                    <div class="icon-box text-info"><i class="fa-solid fa-users"></i></div>
+                    <h3 class="card-title h5">Üyeler</h3>
+                    <p class="card-text small text-muted">Öğrenci ve personel kayıtları.</p>
+                    <a href="/kullanicilar" class="btn btn-outline-info w-100 mt-2">Git <i class="fa-solid fa-arrow-right"></i></a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100 shadow-sm p-4 text-center">
+                <div class="card-body">
+                    <div class="icon-box text-warning"><i class="fa-solid fa-hand-holding-hand"></i></div>
+                    <h3 class="card-title h5">Ödünç / İade</h3>
+                    <p class="card-text small text-muted">Kitap verme ve iade alma işlemleri.</p>
+                    <a href="/odunc" class="btn btn-outline-warning w-100 mt-2">Git <i class="fa-solid fa-arrow-right"></i></a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100 shadow-sm p-4 text-center border-danger border-1">
+                <div class="card-body">
+                    <div class="icon-box text-danger"><i class="fa-solid fa-file-invoice-dollar"></i></div>
+                    <h3 class="card-title h5 text-danger">Ceza Takibi</h3>
+                    <p class="card-text small text-muted">Gecikme cezalarını görüntüle ve tahsil et.</p>
+                    <a href="/cezalar" class="btn btn-outline-danger w-100 mt-2">Git <i class="fa-solid fa-arrow-right"></i></a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row mt-5">
+        <div class="col-12">
+            <div class="alert alert-light text-center border shadow-sm" role="alert">
+                <i class="fa-solid fa-circle-check text-success me-2"></i>
+                Sistem aktif ve veritabanı ile tam senkronize çalışmaktadır.
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer class="bg-dark text-white text-center py-3 mt-5">
+    <div class="container">
+        <p class="mb-0">&copy; 2025 Akıllı Kütüphane Yönetim Sistemi | Öğrenci Projesi</p>
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="tr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Ceza Takip</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { background-color: #f8f9fa; }
+        .card { border: none; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+    <div class="container">
+        <a class="navbar-brand fw-bold" href="/"><i class="fa-solid fa-book-open-reader me-2"></i>Akıllı Kütüphane</a>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link" href="/">Ana Sayfa</a></li>
+                <li class="nav-item"><a class="nav-link" href="/kitaplar">Kitaplar</a></li>
+                <li class="nav-item"><a class="nav-link" href="/kategoriler">Kategoriler</a></li>
+                <li class="nav-item"><a class="nav-link" href="/yazarlar">Yazarlar</a></li>
+                <li class="nav-item"><a class="nav-link" href="/kullanicilar">Üyeler</a></li>
+                <li class="nav-item"><a class="nav-link" href="/odunc">İşlemler</a></li>
+                <li class="nav-item"><a class="nav-link active" href="/cezalar">Cezalar</a></li> </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="row justify-content-center">
+
+        <div class="col-md-10">
+            <div class="card">
+                <div class="card-header bg-danger text-white py-3 d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0"><i class="fa-solid fa-file-invoice-dollar me-2"></i>Ceza Listesi</h5>
+                </div>
+                <div class="card-body p-0">
+                    <table class="table table-hover mb-0">
+                        <thead class="table-light">
+                        <tr>
+                            <th>Üye</th>
+                            <th>Kitap</th>
+                            <th>Gecikme Bedeli</th>
+                            <th>Durum</th>
+                            <th class="text-end pe-4">İşlem</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="ceza : ${cezaListesi}">
+                            <td th:text="${ceza.oduncAlma.kullanici.ad} + ' ' + ${ceza.oduncAlma.kullanici.soyad}">Üye Adı</td>
+                            <td th:text="${ceza.oduncAlma.kitap.kitapAdi}">Kitap Adı</td>
+
+                            <td class="fw-bold text-danger" th:text="${ceza.cezaTutari} + ' TL'">20.00 TL</td>
+
+                            <td>
+                                <span th:if="${!ceza.odendiMi}" class="badge bg-danger">Ödenmedi</span>
+                                <span th:if="${ceza.odendiMi}" class="badge bg-success">Ödendi</span>
+                            </td>
+
+                            <td class="text-end pe-4">
+                                <a th:if="${!ceza.odendiMi}"
+                                   th:href="@{/cezalar/ode/{id}(id=${ceza.id})}"
+                                   class="btn btn-sm btn-success"
+                                   onclick="return confirm('Ödeme alındı olarak işaretlenecek. Onaylıyor musunuz?');">
+                                    <i class="fa-solid fa-lira-sign me-1"></i>Tahsil Et
+                                </a>
+
+                                <span th:if="${ceza.odendiMi}" class="text-success">
+                                        <i class="fa-solid fa-check-circle fa-lg"></i>
+                                    </span>
+                            </td>
+                        </tr>
+
+                        <tr th:if="${#lists.isEmpty(cezaListesi)}">
+                            <td colspan="5" class="text-center py-4 text-muted">
+                                <i class="fa-regular fa-face-smile fa-2x mb-2"></i><br>
+                                Şu an ödenmemiş veya kayıtlı bir ceza bulunmuyor.
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
