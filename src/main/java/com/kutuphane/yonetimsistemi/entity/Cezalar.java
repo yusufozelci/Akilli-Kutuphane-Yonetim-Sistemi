@@ -15,7 +15,7 @@ public class Cezalar {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private int id;
+    private Integer id;
 
     @OneToOne
     @JoinColumn(name = "odunc_alma_id", nullable = false, unique = true)
