@@ -27,6 +27,9 @@ public class OduncAlmaServiceImpl implements OduncAlmaService {
 
     @Override
     public OduncAlma oduncVer(OduncAlma oduncAlma) {
+        if (oduncAlma.getSonIadeTarihi().isBefore(LocalDate.now())) {
+            throw new RuntimeException("Hata: Son iade tarihi bugünden önce olamaz!");
+        }
         oduncAlma.setOduncAlmaTarihi(LocalDateTime.now());
         return oduncAlmaRepository.save(oduncAlma);
     }
