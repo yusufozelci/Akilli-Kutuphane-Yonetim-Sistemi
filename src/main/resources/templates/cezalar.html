@@ -23,7 +23,8 @@
                 <li class="nav-item"><a class="nav-link" href="/yazarlar">Yazarlar</a></li>
                 <li class="nav-item"><a class="nav-link" href="/kullanicilar">Üyeler</a></li>
                 <li class="nav-item"><a class="nav-link" href="/odunc">İşlemler</a></li>
-                <li class="nav-item"><a class="nav-link active" href="/cezalar">Cezalar</a></li> </ul>
+                <li class="nav-item"><a class="nav-link active" href="/cezalar">Cezalar</a></li>
+            </ul>
         </div>
     </div>
 </nav>
@@ -42,15 +43,22 @@
                         <tr>
                             <th>Üye</th>
                             <th>Kitap</th>
-                            <th>Gecikme Bedeli</th>
+                            <th>Gecikme</th> <th>Ceza Tutarı</th>
                             <th>Durum</th>
                             <th class="text-end pe-4">İşlem</th>
                         </tr>
                         </thead>
                         <tbody>
                         <tr th:each="ceza : ${cezaListesi}">
-                            <td th:text="${ceza.oduncAlma.kullanici.ad} + ' ' + ${ceza.oduncAlma.kullanici.soyad}">Üye Adı</td>
-                            <td th:text="${ceza.oduncAlma.kitap.kitapAdi}">Kitap Adı</td>
+                            <td th:text="${ceza.oduncAlma.kullanici.ad} + ' ' + ${ceza.oduncAlma.kullanici.soyad}">Üye</td>
+                            <td th:text="${ceza.oduncAlma.kitap.kitapAdi}">Kitap</td>
+
+                            <td>
+                                    <span class="badge bg-warning text-dark">
+                                        <i class="fa-regular fa-clock me-1"></i>
+                                        <span th:text="${ceza.gecikmeSuresi} + ' Gün'">5 Gün</span>
+                                    </span>
+                            </td>
 
                             <td class="fw-bold text-danger" th:text="${ceza.cezaTutari} + ' TL'">20.00 TL</td>
 
@@ -74,9 +82,9 @@
                         </tr>
 
                         <tr th:if="${#lists.isEmpty(cezaListesi)}">
-                            <td colspan="5" class="text-center py-4 text-muted">
+                            <td colspan="6" class="text-center py-4 text-muted">
                                 <i class="fa-regular fa-face-smile fa-2x mb-2"></i><br>
-                                Şu an ödenmemiş veya kayıtlı bir ceza bulunmuyor.
+                                Harika! Şu an ödenmemiş veya kayıtlı bir ceza bulunmuyor.
                             </td>
                         </tr>
                         </tbody>
