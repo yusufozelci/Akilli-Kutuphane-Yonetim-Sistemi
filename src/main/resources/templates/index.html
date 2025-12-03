@@ -29,12 +29,13 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item"><a class="nav-link active" href="/"><i class="fa-solid fa-house me-1"></i> Ana Sayfa</a></li>
-                <li class="nav-item"><a class="nav-link" href="/kitaplar">Kitaplar</a></li>
+                <li class="nav-item"><a class="nav-link" href="/kitaplar"><i class="fa-solid fa-book me-1"></i> Kitaplar</a></li>
                 <li class="nav-item"><a class="nav-link" href="/kategoriler">Kategoriler</a></li>
                 <li class="nav-item"><a class="nav-link" href="/yazarlar">Yazarlar</a></li>
                 <li class="nav-item"><a class="nav-link" href="/kullanicilar">Üyeler</a></li>
                 <li class="nav-item"><a class="nav-link" href="/odunc">İşlemler</a></li>
                 <li class="nav-item"><a class="nav-link text-danger fw-bold" href="/cezalar">Cezalar</a></li>
+                <li class="nav-item"><a class="nav-link" href="/loglar"><i class="fa-solid fa-clipboard-list me-1"></i> Loglar</a></li>
             </ul>
         </div>
     </div>
@@ -54,9 +55,9 @@
             <div class="card h-100 shadow-sm p-4 text-center">
                 <div class="card-body">
                     <div class="icon-box text-primary"><i class="fa-solid fa-book"></i></div>
-                    <h3 class="card-title h5">Kitap Yönetimi</h3>
+                    <h3 class="card-title h5">Kitaplar</h3>
                     <p class="card-text small text-muted">Stok durumu ve kitap envanteri.</p>
-                    <a href="/kitaplar" class="btn btn-outline-primary w-100 mt-2">Git <i class="fa-solid fa-arrow-right"></i></a>
+                    <a href="/kitaplar" class="btn btn-outline-primary w-100 mt-2">Git</a>
                 </div>
             </div>
         </div>
@@ -67,7 +68,7 @@
                     <div class="icon-box text-secondary"><i class="fa-solid fa-tags"></i></div>
                     <h3 class="card-title h5">Kategoriler</h3>
                     <p class="card-text small text-muted">Kitap türlerini düzenleyin.</p>
-                    <a href="/kategoriler" class="btn btn-outline-secondary w-100 mt-2">Git <i class="fa-solid fa-arrow-right"></i></a>
+                    <a href="/kategoriler" class="btn btn-outline-secondary w-100 mt-2">Git</a>
                 </div>
             </div>
         </div>
@@ -78,7 +79,7 @@
                     <div class="icon-box text-success"><i class="fa-solid fa-user-pen"></i></div>
                     <h3 class="card-title h5">Yazarlar</h3>
                     <p class="card-text small text-muted">Yazar ekleme ve düzenleme.</p>
-                    <a href="/yazarlar" class="btn btn-outline-success w-100 mt-2">Git <i class="fa-solid fa-arrow-right"></i></a>
+                    <a href="/yazarlar" class="btn btn-outline-success w-100 mt-2">Git</a>
                 </div>
             </div>
         </div>
@@ -89,7 +90,7 @@
                     <div class="icon-box text-info"><i class="fa-solid fa-users"></i></div>
                     <h3 class="card-title h5">Üyeler</h3>
                     <p class="card-text small text-muted">Öğrenci ve personel kayıtları.</p>
-                    <a href="/kullanicilar" class="btn btn-outline-info w-100 mt-2">Git <i class="fa-solid fa-arrow-right"></i></a>
+                    <a href="/kullanicilar" class="btn btn-outline-info w-100 mt-2">Git</a>
                 </div>
             </div>
         </div>
@@ -100,7 +101,7 @@
                     <div class="icon-box text-warning"><i class="fa-solid fa-hand-holding-hand"></i></div>
                     <h3 class="card-title h5">Ödünç / İade</h3>
                     <p class="card-text small text-muted">Kitap verme ve iade alma işlemleri.</p>
-                    <a href="/odunc" class="btn btn-outline-warning w-100 mt-2">Git <i class="fa-solid fa-arrow-right"></i></a>
+                    <a href="/odunc" class="btn btn-outline-warning w-100 mt-2">Git</a>
                 </div>
             </div>
         </div>
@@ -111,7 +112,18 @@
                     <div class="icon-box text-danger"><i class="fa-solid fa-file-invoice-dollar"></i></div>
                     <h3 class="card-title h5 text-danger">Ceza Takibi</h3>
                     <p class="card-text small text-muted">Gecikme cezalarını görüntüle ve tahsil et.</p>
-                    <a href="/cezalar" class="btn btn-outline-danger w-100 mt-2">Git <i class="fa-solid fa-arrow-right"></i></a>
+                    <a href="/cezalar" class="btn btn-outline-danger w-100 mt-2">Git</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100 shadow-sm p-4 text-center border-dark border-1">
+                <div class="card-body">
+                    <div class="icon-box text-dark"><i class="fa-solid fa-user-secret"></i></div>
+                    <h3 class="card-title h5 text-dark">Sistem Kayıtları</h3>
+                    <p class="card-text small text-muted">Tüm ödünç/iade işlemlerinin denetim kaydı.</p>
+                    <a href="/loglar" class="btn btn-outline-dark w-100 mt-2">Git</a>
                 </div>
             </div>
         </div>

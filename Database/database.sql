@@ -85,23 +85,38 @@ BEGIN
     END IF;
 END;
 
--- Stok Yönetimi Trigger'ı
+-- Stok Yönetimi Triggerlar'ı
 
 DROP TRIGGER IF EXISTS after_odunc_alma_stok_azalt;
+
 CREATE TRIGGER after_odunc_alma_stok_azalt
     AFTER INSERT ON OduncAlma
     FOR EACH ROW
 BEGIN
-    UPDATE Kitaplar SET adet = adet - 1 WHERE id = NEW.kitap_id;
+    UPDATE Kitaplar
+    SET adet = adet - 1
+    WHERE id = NEW.kitap_id;
+    INSERT INTO Islem_Loglari (islem_turu, aciklama, kullanici_id, kitap_id)
+    VALUES ('ODUNC_VERILDI',
+            CONCAT('Kitap ID ', NEW.kitap_id, ' kullanıcı ID ', NEW.kullanici_id, ' tarafından ödünç alındı.'),
+            NEW.kullanici_id,
+            NEW.kitap_id);
 END;
-
 DROP TRIGGER IF EXISTS after_odunc_iade_stok_artir;
+
 CREATE TRIGGER after_odunc_iade_stok_artir
     AFTER UPDATE ON OduncAlma
     FOR EACH ROW
 BEGIN
     IF (OLD.gercek_iade_tarihi IS NULL AND NEW.gercek_iade_tarihi IS NOT NULL) THEN
-        UPDATE Kitaplar SET adet = adet + 1 WHERE id = NEW.kitap_id;
+        UPDATE Kitaplar
+        SET adet = adet + 1
+        WHERE id = NEW.kitap_id;
+        INSERT INTO Islem_Loglari (islem_turu, aciklama, kullanici_id, kitap_id)
+        VALUES ('IADE_ALINDI',
+                CONCAT('Kitap ID ', NEW.kitap_id, ' iade alındı. Ödünç Kayıt ID:', NEW.id),
+                NEW.kullanici_id,
+                NEW.kitap_id);
     END IF;
 END;
 

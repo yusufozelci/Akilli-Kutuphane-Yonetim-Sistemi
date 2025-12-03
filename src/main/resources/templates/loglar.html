@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="tr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Sistem Denetim Logları</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { background-color: #f8f9fa; }
+        .card { border: none; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+    <div class="container">
+        <a class="navbar-brand fw-bold" href="/"><i class="fa-solid fa-book-open-reader me-2"></i>Akıllı Kütüphane</a>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link" href="/">Ana Sayfa</a></li>
+                <li class="nav-item"><a class="nav-link" href="/kitaplar">Kitaplar</a></li>
+                <li class="nav-item"><a class="nav-link" href="/kategoriler">Kategoriler</a></li>
+                <li class="nav-item"><a class="nav-link" href="/yazarlar">Yazarlar</a></li>
+                <li class="nav-item"><a class="nav-link" href="/kullanicilar">Üyeler</a></li>
+                <li class="nav-item"><a class="nav-link" href="/odunc">İşlemler</a></li>
+                <li class="nav-item"><a class="nav-link" href="/cezalar">Cezalar</a></li>
+                <li class="nav-item"><a class="nav-link active text-warning" href="/loglar">Loglar</a></li> </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header bg-warning text-dark py-3">
+                    <h5 class="mb-0"><i class="fa-solid fa-clipboard-list me-2"></i>Sistem Denetim Kayıtları (Audit Log)</h5>
+                </div>
+                <div class="card-body p-0">
+                    <table class="table table-hover mb-0">
+                        <thead class="table-light">
+                        <tr>
+                            <th>Tarih</th>
+                            <th>İşlem Türü</th>
+                            <th>Kitap ID</th>
+                            <th>Kullanıcı ID</th>
+                            <th>Açıklama</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="log : ${logListesi}">
+                            <td th:text="${#temporals.format(log.tarih, 'dd.MM.yyyy HH:mm:ss')}" class="text-danger fw-bold">01.00.0000 00:00:00</td>
+                            <td th:text="${log.islemTuru}" class="fw-bold">ODUNC_VERILDI</td>
+                            <td th:text="${log.kitapId}">1</td>
+                            <td th:text="${log.kullaniciId}">1</td>
+                            <td th:text="${log.aciklama}">Kitap ID 1 kullanıcı ID 1 tarafından ödünç alındı.</td>
+                        </tr>
+
+                        <tr th:if="${#lists.isEmpty(logListesi)}">
+                            <td colspan="5" class="text-center py-4 text-muted">Sistemde henüz kayıtlı bir log işlemi yok.</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
