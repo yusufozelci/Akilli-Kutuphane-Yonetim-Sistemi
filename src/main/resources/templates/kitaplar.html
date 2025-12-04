@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="tr" xmlns:th="http://www.thymeleaf.org">
+<html lang="tr" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title>Kitap Yönetimi</title>
@@ -15,24 +16,53 @@
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
     <div class="container">
-        <a class="navbar-brand fw-bold" href="/"><i class="fa-solid fa-book-open-reader me-2"></i>Akıllı Kütüphane</a>
-        <div class="collapse navbar-collapse">
+        <a class="navbar-brand fw-bold" href="/">
+            <i class="fa-solid fa-book-open-reader me-2"></i>Akıllı Kütüphane
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto">
+
                 <li class="nav-item"><a class="nav-link" href="/">Ana Sayfa</a></li>
-                <li class="nav-item"><a class="nav-link active" href="/kitaplar">Kitaplar</a></li>
-                <li class="nav-item"><a class="nav-link" href="/kategoriler">Kategoriler</a></li>
-                <li class="nav-item"><a class="nav-link" href="/yazarlar">Yazarlar</a></li>
-                <li class="nav-item"><a class="nav-link" href="/kullanicilar">Üyeler</a></li>
-                <li class="nav-item"><a class="nav-link" href="/odunc">İşlemler</a></li>
+                <li class="nav-item"><a class="nav-link" href="/kitaplar">Kitaplar</a></li>
+
+                <li class="nav-item" sec:authorize="hasAuthority('ADMIN')">
+                    <a class="nav-link" href="/kategoriler">Kategoriler</a>
+                </li>
+                <li class="nav-item" sec:authorize="hasAuthority('ADMIN')">
+                    <a class="nav-link" href="/yazarlar">Yazarlar</a>
+                </li>
+                <li class="nav-item" sec:authorize="hasAuthority('ADMIN')">
+                    <a class="nav-link" href="/kullanicilar">Üyeler</a>
+                </li>
+                <li class="nav-item" sec:authorize="hasAuthority('ADMIN')">
+                    <a class="nav-link" href="/odunc">İşlemler</a>
+                </li>
+                <li class="nav-item" sec:authorize="hasAuthority('ADMIN')">
+                    <a class="nav-link text-danger fw-bold" href="/cezalar">Cezalar</a>
+                </li>
+                <li class="nav-item" sec:authorize="hasAuthority('ADMIN')">
+                    <a class="nav-link" href="/loglar">Loglar</a>
+                </li>
+
+                <li class="nav-item ms-3">
+                    <form th:action="@{/logout}" method="post" class="d-inline">
+                        <button type="submit" class="btn btn-outline-light btn-sm mt-1">
+                            <i class="fa-solid fa-sign-out-alt me-1"></i>Çıkış Yap
+                        </button>
+                    </form>
+                </li>
             </ul>
         </div>
     </div>
 </nav>
 
 <div class="container">
-    <div class="row">
+    <div class="row justify-content-center">
 
-        <div class="col-md-4 mb-4">
+        <div class="col-md-4 mb-4" sec:authorize="hasAuthority('ADMIN')">
             <div class="card">
                 <div class="card-header bg-primary text-white py-3">
                     <h5 class="mb-0">
@@ -42,49 +72,37 @@
                 </div>
                 <div class="card-body">
                     <form th:action="@{/kitaplar/kaydet}" th:object="${yeniKitap}" method="post">
-
                         <input type="hidden" th:field="*{id}" />
-
                         <div class="mb-3">
                             <label class="form-label">Kitap Adı</label>
                             <input type="text" class="form-control" th:field="*{kitapAdi}" required>
                         </div>
-
                         <div class="mb-3">
                             <label class="form-label">ISBN</label>
                             <input type="text" class="form-control" th:field="*{isbn}">
                         </div>
-
                         <div class="mb-3">
                             <label class="form-label">Yayın Yılı</label>
                             <input type="number" class="form-control" th:field="*{yayinYili}">
                         </div>
-
                         <div class="mb-3">
                             <label class="form-label">Stok Adedi</label>
                             <input type="number" class="form-control" th:field="*{adet}" required>
                         </div>
-
                         <div class="mb-3">
                             <label class="form-label">Yazar Seç</label>
                             <select class="form-select" th:field="*{yazar.id}" required>
                                 <option value="">Bir yazar seçin...</option>
-                                <option th:each="yzr : ${tumYazarlar}"
-                                        th:value="${yzr.id}"
-                                        th:text="${yzr.ad} + ' ' + ${yzr.soyad}"></option>
+                                <option th:each="yzr : ${tumYazarlar}" th:value="${yzr.id}" th:text="${yzr.ad} + ' ' + ${yzr.soyad}"></option>
                             </select>
                         </div>
-
                         <div class="mb-3">
                             <label class="form-label">Kategori Seç</label>
                             <select class="form-select" th:field="*{kategori.id}" required>
                                 <option value="">Bir kategori seçin...</option>
-                                <option th:each="kat : ${tumKategoriler}"
-                                        th:value="${kat.id}"
-                                        th:text="${kat.ad}"></option>
+                                <option th:each="kat : ${tumKategoriler}" th:value="${kat.id}" th:text="${kat.ad}"></option>
                             </select>
                         </div>
-
                         <div class="d-grid gap-2">
                             <button type="submit" class="btn btn-primary">Kaydet</button>
                             <a th:if="${yeniKitap.id != null}" href="/kitaplar" class="btn btn-outline-secondary">İptal</a>
@@ -94,7 +112,18 @@
             </div>
         </div>
 
-        <div class="col-md-8">
+        <div th:class="${#authorization.expression('hasAuthority(''ADMIN'')')} ? 'col-md-8' : 'col-md-12'">
+            <form th:action="@{/kitaplar}" method="get" class="mb-3">
+                <div class="input-group">
+                    <input type="text" name="keyword" class="form-control" placeholder="Kitap adı, Yazar veya ISBN ara..." th:value="${keyword}">
+                    <button class="btn btn-primary" type="submit">
+                        <i class="fa-solid fa-search"></i> Ara
+                    </button>
+                    <a href="/kitaplar" class="btn btn-secondary" title="Temizle">
+                        <i class="fa-solid fa-times"></i>
+                    </a>
+                </div>
+            </form>
             <div class="card">
                 <div class="card-header bg-white py-3">
                     <h5 class="mb-0 text-secondary"><i class="fa-solid fa-list me-2"></i>Kitap Listesi</h5>
@@ -113,9 +142,7 @@
                         <tbody>
                         <tr th:each="kitap : ${kitapListesi}">
                             <td th:text="${kitap.kitapAdi}">Ad</td>
-
-                            <td th:text="${kitap.yazar != null} ? ${kitap.yazar.ad} + ' ' + ${kitap.yazar.soyad} : 'Yazar Silinmiş'">Yazar</td>
-
+                            <td th:text="${kitap.yazar != null} ? ${kitap.yazar.ad} + ' ' + ${kitap.yazar.soyad} : 'Silinmiş'">Yazar</td>
                             <td th:text="${kitap.kategori != null} ? ${kitap.kategori.ad} : '-'">Kat</td>
 
                             <td>
@@ -124,12 +151,26 @@
                             </td>
 
                             <td class="text-end pe-4">
-                                <a th:href="@{/kitaplar/duzenle/{id}(id=${kitap.id})}" class="btn btn-sm btn-outline-primary me-1"><i class="fa-solid fa-pen"></i></a>
-                                <a th:href="@{/kitaplar/sil/{id}(id=${kitap.id})}"
-                                   class="btn btn-sm btn-outline-danger"
-                                   onclick="return confirm('Silmek istediğinize emin misiniz?');">
-                                    <i class="fa-solid fa-trash"></i>
-                                </a>
+
+                                <div sec:authorize="hasAuthority('ADMIN')">
+                                    <a th:href="@{/kitaplar/duzenle/{id}(id=${kitap.id})}" class="btn btn-sm btn-outline-primary me-1"><i class="fa-solid fa-pen"></i></a>
+                                    <a th:href="@{/kitaplar/sil/{id}(id=${kitap.id})}"
+                                       class="btn btn-sm btn-outline-danger"
+                                       onclick="return confirm('Silmek istediğinize emin misiniz?');">
+                                        <i class="fa-solid fa-trash"></i>
+                                    </a>
+                                </div>
+
+                                <div sec:authorize="hasAuthority('KULLANICI')">
+                                    <a th:if="${kitap.adet > 0}"
+                                       th:href="@{/ogrenci/kitap-al/{id}(id=${kitap.id})}"
+                                       class="btn btn-sm btn-success"
+                                       onclick="return confirm('Bu kitabı ödünç almak istiyor musunuz?');">
+                                        <i class="fa-solid fa-plus-circle me-1"></i> Al
+                                    </a>
+                                    <button th:if="${kitap.adet <= 0}" class="btn btn-sm btn-secondary" disabled>Tükendi</button>
+                                </div>
+
                             </td>
                         </tr>
                         </tbody>

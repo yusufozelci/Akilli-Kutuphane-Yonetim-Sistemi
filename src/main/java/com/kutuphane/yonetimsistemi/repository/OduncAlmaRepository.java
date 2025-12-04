@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface OduncAlmaRepository extends JpaRepository<OduncAlma, Integer> {
-
+    java.util.List<OduncAlma> findAllByKullanici_Id(Integer kullaniciId);
 }

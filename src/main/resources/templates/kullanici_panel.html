@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="tr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Kullanıcı Paneli</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { background-color: #f0f2f5; }
+        .user-header { background: linear-gradient(to right, #4facfe 0%, #00f2fe 100%); color: white; padding: 40px 0; margin-bottom: 30px; border-radius: 0 0 20px 20px;}
+        .book-card { border: none; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); transition: 0.3s; }
+        .book-card:hover { transform: translateY(-2px); }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+        <a class="navbar-brand fw-bold" href="/"><i class="fa-solid fa-book-reader me-2"></i>Kütüphane</a>
+        <div class="d-flex">
+            <form th:action="@{/logout}" method="post">
+                <button type="submit" class="btn btn-outline-light btn-sm">Çıkış Yap <i class="fa-solid fa-sign-out-alt ms-1"></i></button>
+            </form>
+        </div>
+    </div>
+</nav>
+
+<div class="user-header text-center shadow">
+    <div class="container">
+        <h1 class="fw-bold">Merhaba, <span th:text="${kullanici.ad}">Kullanıcı</span>! 👋</h1>
+        <p class="lead">Kütüphane hesabınıza hoş geldiniz.</p>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+
+        <div class="col-md-4 mb-4">
+            <div class="card book-card bg-white mb-3">
+                <div class="card-header bg-primary text-white text-center py-3">
+                    <h5 class="mb-0"><i class="fa-solid fa-id-card me-2"></i>Profil Bilgileri</h5>
+                </div>
+                <div class="card-body p-4">
+                    <div class="mb-3 border-bottom pb-2">
+                        <small class="text-muted d-block">Ad Soyad</small>
+                        <span class="fw-bold fs-5" th:text="${kullanici.ad} + ' ' + ${kullanici.soyad}">Ad Soyad</span>
+                    </div>
+                    <div class="mb-3 border-bottom pb-2">
+                        <small class="text-muted d-block">E-Posta</small>
+                        <span class="fw-bold" th:text="${kullanici.email}">email@ornek.com</span>
+                    </div>
+                    <div class="mb-0">
+                        <small class="text-muted d-block">Rol</small>
+                        <span class="badge bg-success px-3 py-2 rounded-pill">Öğrenci / Üye</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card book-card bg-white">
+                <div class="card-body text-center p-4">
+                    <i class="fa-solid fa-search fa-3x text-primary mb-3"></i>
+                    <h4>Kitap Ara</h4>
+                    <p class="text-muted">Kütüphanedeki mevcut kitapları incele.</p>
+                    <a href="/kitaplar" class="btn btn-primary w-100">Kitapları Listele</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <div class="card book-card">
+                <div class="card-header bg-white py-3 border-0">
+                    <h5 class="mb-0 text-primary fw-bold"><i class="fa-solid fa-clock-rotate-left me-2"></i>Ödünç Aldığım Kitaplar</h5>
+                </div>
+                <div class="card-body p-0">
+                    <table class="table table-hover mb-0">
+                        <thead class="table-light">
+                        <tr>
+                            <th class="ps-4">Kitap Adı</th>
+                            <th>Alış Tarihi</th>
+                            <th>Son Tarih</th>
+                            <th>Durum</th>
+                            <th class="text-end pe-4">İşlem</th> </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="islem : ${kitaplarim}">
+                            <td class="ps-4 fw-bold" th:text="${islem.kitap.kitapAdi}">Kitap Adı</td>
+
+                            <td th:text="${#temporals.format(islem.oduncAlmaTarihi, 'dd.MM.yyyy')}">01.01.2023</td>
+                            <td class="text-danger" th:text="${#temporals.format(islem.sonIadeTarihi, 'dd.MM.yyyy')}">15.01.2023</td>
+
+                            <td>
+                                <span th:if="${islem.gercekIadeTarihi == null}" class="badge bg-warning text-dark">Okuyor</span>
+                                <span th:if="${islem.gercekIadeTarihi != null}" class="badge bg-success">İade Etti</span>
+                            </td>
+
+                            <td class="text-end pe-4">
+                                <a th:if="${islem.gercekIadeTarihi == null}"
+                                   th:href="@{/ogrenci/iade-et/{id}(id=${islem.id})}"
+                                   class="btn btn-sm btn-outline-danger"
+                                   onclick="return confirm('Kitabı iade etmek üzeresiniz. Emin misiniz?');">
+                                    <i class="fa-solid fa-rotate-left me-1"></i>İade Et
+                                </a>
+                            </td>
+                        </tr>
+
+                        <tr th:if="${#lists.isEmpty(kitaplarim)}">
+                            <td colspan="5" class="text-center py-5 text-muted"> <i class="fa-solid fa-book-open fa-2x mb-3"></i><br>
+                                Henüz hiç kitap ödünç almadınız.
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -6,5 +6,6 @@ public interface KitapService {
     List<Kitap> findAll();
     Kitap getById(int id);
     Kitap save(Kitap kitap);
+    List<Kitap> search(String keyword);
     void deleteById(int id);
 }

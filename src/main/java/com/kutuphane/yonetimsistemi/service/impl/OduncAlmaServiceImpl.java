@@ -1,6 +1,7 @@
 package com.kutuphane.yonetimsistemi.service.impl;
+
+import com.kutuphane.yonetimsistemi.email.EmailService;
 import com.kutuphane.yonetimsistemi.entity.OduncAlma;
-import com.kutuphane.yonetimsistemi.repository.KategoriRepository;
 import com.kutuphane.yonetimsistemi.repository.OduncAlmaRepository;
 import com.kutuphane.yonetimsistemi.service.OduncAlmaService;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +14,9 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class OduncAlmaServiceImpl implements OduncAlmaService {
+
     private final OduncAlmaRepository oduncAlmaRepository;
+    private final EmailService emailService;
 
     @Override
     public List<OduncAlma> findAll() {
@@ -22,7 +25,8 @@ public class OduncAlmaServiceImpl implements OduncAlmaService {
 
     @Override
     public OduncAlma getById(int id) {
-        return oduncAlmaRepository.findById(id).orElseThrow(() -> new RuntimeException("Odunç alma kaydı bulunamadı: "+id));
+        return oduncAlmaRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Ödünç alma kaydı bulunamadı: " + id));
     }
 
     @Override
@@ -35,15 +39,29 @@ public class OduncAlmaServiceImpl implements OduncAlmaService {
     }
 
     @Override
-    public OduncAlma kitapIadeEt(int oduncAlmaId){
+    public OduncAlma kitapIadeEt(int oduncAlmaId) {
         OduncAlma oduncAlma = getById(oduncAlmaId);
         oduncAlma.setGercekIadeTarihi(LocalDate.now());
 
+        if (oduncAlma.getGercekIadeTarihi().isAfter(oduncAlma.getSonIadeTarihi())) {
+            System.out.println("Gecikme tespit edildi. E-posta gönderiliyor...");
+            emailService.gecikmeUyarisiGonder(
+                    oduncAlma.getKullanici().getEmail(),
+                    oduncAlma.getKitap().getKitapAdi(),
+                    oduncAlma.getSonIadeTarihi().toString()
+            );
+        }
         return oduncAlmaRepository.save(oduncAlma);
     }
+
     @Override
     public void deleteById(int id) {
         OduncAlma oduncAlma = getById(id);
         oduncAlmaRepository.delete(oduncAlma);
+    }
+
+    @Override
+    public List<OduncAlma> getKullaniciGecmisi(Integer kullaniciId) {
+        return oduncAlmaRepository.findAllByKullanici_Id(kullaniciId);
     }
 }

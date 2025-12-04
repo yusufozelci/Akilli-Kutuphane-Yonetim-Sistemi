@@ -1,5 +1,8 @@
 package com.kutuphane.yonetimsistemi.controller;
 
+import java.security.Principal;
+import com.kutuphane.yonetimsistemi.entity.Kullanici;
+import com.kutuphane.yonetimsistemi.repository.KullaniciRepository;
 import com.kutuphane.yonetimsistemi.entity.*;
 import com.kutuphane.yonetimsistemi.service.*;
 import lombok.RequiredArgsConstructor;
@@ -9,6 +12,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+
+import java.util.List;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequiredArgsConstructor
@@ -20,11 +26,30 @@ public class WebController {
     private final KullaniciService kullaniciService;
     private final OduncAlmaService oduncAlmaService;
     private final CezalarService cezalarService;
+    private final KullaniciRepository kullaniciRepository;
 
-    @GetMapping("/")
-    public String anaSayfayiGoster(Model model) {
-        return "index";
+    @GetMapping("/login")
+    public String girisSayfasi() {
+        return "login";
     }
+    @GetMapping("/")
+    public String anaSayfayiGoster(Model model, java.security.Principal principal) {
+
+        if (principal == null) {
+            return "redirect:/login";
+        }
+        String email = principal.getName();
+        com.kutuphane.yonetimsistemi.entity.Kullanici girisYapan = kullaniciRepository.findByEmail(email).get();
+
+        if (girisYapan.getRol().name().equals("ADMIN")) {
+            return "index";
+        } else {
+            model.addAttribute("kullanici", girisYapan);
+            model.addAttribute("kitaplarim", oduncAlmaService.getKullaniciGecmisi(girisYapan.getId()));
+            return "kullanici_panel";
+        }
+    }
+
     @GetMapping("/yazarlar")
     public String yazarlariListele(Model model) {
         model.addAttribute("yazarListesi", yazarService.findAll());
@@ -52,11 +77,22 @@ public class WebController {
     }
 
     @GetMapping("/kitaplar")
-    public String kitaplariListele(Model model) {
-        model.addAttribute("kitapListesi", kitapService.findAll());
+    public String kitaplariListele(Model model, @RequestParam(required = false) String keyword) {
+
+        List<Kitap> liste;
+
+        if (keyword != null && !keyword.isEmpty()) {
+            liste = kitapService.search(keyword);
+        } else {
+            liste = kitapService.findAll();
+        }
+
+        model.addAttribute("kitapListesi", liste);
+        model.addAttribute("keyword", keyword);
         model.addAttribute("tumYazarlar", yazarService.findAll());
         model.addAttribute("tumKategoriler", kategoriService.findAll());
         model.addAttribute("yeniKitap", new Kitap());
+
         return "kitaplar";
     }
 
@@ -173,5 +209,34 @@ public class WebController {
     public String cezaOde(@PathVariable int id) {
         cezalarService.cezaOde(id);
         return "redirect:/cezalar";
+    }
+
+    @GetMapping("/ogrenci/kitap-al/{kitapId}")
+    public String ogrenciKitapAl(@PathVariable Integer kitapId, java.security.Principal principal) {
+        String email = principal.getName();
+        com.kutuphane.yonetimsistemi.entity.Kullanici ogrenci = kullaniciService.findAll().stream()
+                .filter(k -> k.getEmail().equals(email)).findFirst().get();
+
+        Kitap kitap = kitapService.getById(kitapId);
+
+        if (kitap.getAdet() <= 0) {
+            // Buraya hata mesajı eklenebilir ama şimdilik basit tutalım
+            return "redirect:/kitaplar?error=stok";
+        }
+
+        OduncAlma islem = new OduncAlma();
+        islem.setKullanici(ogrenci);
+        islem.setKitap(kitap);
+        islem.setSonIadeTarihi(java.time.LocalDate.now().plusDays(15)); // Otomatik 15 gün süre ver
+
+        oduncAlmaService.oduncVer(islem);
+
+        return "redirect:/"; // Kullanıcı paneline dön
+    }
+
+    @GetMapping("/ogrenci/iade-et/{oduncId}")
+    public String ogrenciIadeEt(@PathVariable Integer oduncId) {
+        oduncAlmaService.kitapIadeEt(oduncId);
+        return "redirect:/";
     }
 }

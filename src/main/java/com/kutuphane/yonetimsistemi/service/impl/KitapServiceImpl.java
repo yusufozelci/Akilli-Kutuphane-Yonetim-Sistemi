@@ -34,4 +34,12 @@ public class KitapServiceImpl implements KitapService {
         Kitap kitap = getById(id);
         kitapRepository.deleteById(id);
     }
+
+    @Override
+    public List<Kitap> search(String keyword) {
+        if (keyword != null) {
+            return kitapRepository.aramaYap(keyword);
+        }
+        return kitapRepository.findAll();
+    }
 }
