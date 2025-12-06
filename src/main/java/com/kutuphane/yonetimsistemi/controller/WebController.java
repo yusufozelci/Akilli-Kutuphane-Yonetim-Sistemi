@@ -1,7 +1,5 @@
 package com.kutuphane.yonetimsistemi.controller;
 
-import java.security.Principal;
-import com.kutuphane.yonetimsistemi.entity.Kullanici;
 import com.kutuphane.yonetimsistemi.repository.KullaniciRepository;
 import com.kutuphane.yonetimsistemi.entity.*;
 import com.kutuphane.yonetimsistemi.service.*;
@@ -220,18 +218,17 @@ public class WebController {
         Kitap kitap = kitapService.getById(kitapId);
 
         if (kitap.getAdet() <= 0) {
-            // Buraya hata mesajı eklenebilir ama şimdilik basit tutalım
             return "redirect:/kitaplar?error=stok";
         }
 
         OduncAlma islem = new OduncAlma();
         islem.setKullanici(ogrenci);
         islem.setKitap(kitap);
-        islem.setSonIadeTarihi(java.time.LocalDate.now().plusDays(15)); // Otomatik 15 gün süre ver
+        islem.setSonIadeTarihi(java.time.LocalDate.now().plusDays(15));
 
         oduncAlmaService.oduncVer(islem);
 
-        return "redirect:/"; // Kullanıcı paneline dön
+        return "redirect:/";
     }
 
     @GetMapping("/ogrenci/iade-et/{oduncId}")

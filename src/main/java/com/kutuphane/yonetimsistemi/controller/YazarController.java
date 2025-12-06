@@ -33,7 +33,7 @@ public class YazarController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Yazar> yazarGuncelle(@PathVariable int id, @RequestBody Yazar yazar) {
-        yazar.setId(id); // URL'den gelen ID'yi nesneye ata
+        yazar.setId(id);
         return ResponseEntity.ok(yazarService.update(yazar));
     }
 
