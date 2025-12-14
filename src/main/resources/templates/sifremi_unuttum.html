@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Şifremi Unuttum</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light d-flex align-items-center justify-content-center" style="height: 100vh;">
+
+<div class="card p-4 shadow" style="width: 400px;">
+    <h3 class="text-center mb-3">Şifremi Unuttum</h3>
+
+    <div th:if="${hata}" class="alert alert-danger" th:text="${hata}"></div>
+
+    <form action="/sifremi-unuttum" method="post">
+        <div class="mb-3">
+            <label>E-posta Adresiniz</label>
+            <input type="email" name="email" class="form-control" placeholder="mail@ornek.com" required>
+        </div>
+        <button type="submit" class="btn btn-primary w-100">Kod Gönder</button>
+    </form>
+
+    <div class="text-center mt-3">
+        <a href="/login" class="text-decoration-none">Giriş Sayfasına Dön</a>
+    </div>
+</div>
+
+</body>
+</html>

@@ -24,7 +24,6 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto">
-
                 <li class="nav-item"><a class="nav-link" href="/">Ana Sayfa</a></li>
                 <li class="nav-item"><a class="nav-link" href="/kitaplar">Kitaplar</a></li>
 
@@ -35,16 +34,13 @@
                     <a class="nav-link" href="/yazarlar">Yazarlar</a>
                 </li>
                 <li class="nav-item" sec:authorize="hasAuthority('ADMIN')">
-                    <a class="nav-link" href="/kullanicilar">Üyeler</a>
+                    <a class="nav-link active" href="/kullanicilar">Üyeler</a>
                 </li>
                 <li class="nav-item" sec:authorize="hasAuthority('ADMIN')">
                     <a class="nav-link" href="/odunc">İşlemler</a>
                 </li>
                 <li class="nav-item" sec:authorize="hasAuthority('ADMIN')">
                     <a class="nav-link text-danger fw-bold" href="/cezalar">Cezalar</a>
-                </li>
-                <li class="nav-item" sec:authorize="hasAuthority('ADMIN')">
-                    <a class="nav-link" href="/loglar">Loglar</a>
                 </li>
 
                 <li class="nav-item ms-3">
@@ -60,6 +56,12 @@
 </nav>
 
 <div class="container">
+
+    <div th:if="${param.msg}" class="alert alert-success alert-dismissible fade show" role="alert">
+        İşlem başarıyla gerçekleştirildi.
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Kapat"></button>
+    </div>
+
     <div class="row">
 
         <div class="col-md-4 mb-4">
@@ -74,6 +76,11 @@
                     <form th:action="@{/kullanicilar/kaydet}" th:object="${yeniKullanici}" method="post">
 
                         <input type="hidden" th:field="*{id}" />
+
+                        <div class="mb-3" th:if="${yeniKullanici.id == null}">
+                            <label class="form-label">Başlangıç Şifresi</label>
+                            <input type="text" class="form-control" name="sifre" required>
+                        </div>
 
                         <div class="mb-3">
                             <label class="form-label">Ad</label>
@@ -91,11 +98,6 @@
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label">Şifre</label>
-                            <input type="password" class="form-control" th:field="*{sifre}" placeholder="******" required>
-                        </div>
-
-                        <div class="mb-3">
                             <label class="form-label">Rol</label>
                             <select class="form-select" th:field="*{rol}">
                                 <option value="KULLANICI">Kullanıcı (Öğrenci)</option>
@@ -109,7 +111,7 @@
                             </button>
 
                             <a th:if="${yeniKullanici.id != null}" href="/kullanicilar" class="btn btn-outline-secondary">
-                                İptal
+                                İptal ve Yeni Ekleme Moduna Dön
                             </a>
                         </div>
                     </form>
@@ -143,12 +145,52 @@
                             </td>
 
                             <td class="text-end pe-4">
-                                <a th:href="@{/kullanicilar/duzenle/{id}(id=${kul.id})}" class="btn btn-sm btn-outline-primary me-1"><i class="fa-solid fa-pen"></i></a>
+                                <button type="button" class="btn btn-sm btn-warning me-1"
+                                        data-bs-toggle="modal"
+                                        th:data-bs-target="'#sifreModal' + ${kul.id}"
+                                        title="Şifre Sıfırla">
+                                    <i class="fa-solid fa-key"></i>
+                                </button>
+
+                                <a th:href="@{/kullanicilar/duzenle/{id}(id=${kul.id})}" class="btn btn-sm btn-outline-primary me-1" title="Düzenle">
+                                    <i class="fa-solid fa-pen"></i>
+                                </a>
+
                                 <a th:href="@{/kullanicilar/sil/{id}(id=${kul.id})}"
                                    class="btn btn-sm btn-outline-danger"
-                                   onclick="return confirm('Bu kullanıcıyı silmek istediğinize emin misiniz?');">
+                                   onclick="return confirm('Bu kullanıcıyı silmek istediğinize emin misiniz?');"
+                                   title="Sil">
                                     <i class="fa-solid fa-trash"></i>
                                 </a>
+
+                                <div class="modal fade" th:id="'sifreModal' + ${kul.id}" tabindex="-1" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header bg-warning">
+                                                <h5 class="modal-title text-dark">Şifre Değiştir: <span th:text="${kul.ad}"></span></h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Kapat"></button>
+                                            </div>
+
+                                            <form action="/kullanicilar/admin-sifre-guncelle" method="post">
+                                                <div class="modal-body text-start">
+                                                    <input type="hidden" name="id" th:value="${kul.id}">
+
+                                                    <div class="mb-3">
+                                                        <label class="form-label fw-bold">Yeni Şifre Ata</label>
+                                                        <input type="text" name="yeniSifre" class="form-control" placeholder="Yeni şifreyi buraya yazın..." required>
+                                                        <div class="form-text text-muted">
+                                                            <i class="fa-solid fa-info-circle"></i> Yönetici olarak eski şifreyi bilmenize gerek yoktur.
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+                                                    <button type="submit" class="btn btn-primary">Güncelle</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
                             </td>
                         </tr>
 

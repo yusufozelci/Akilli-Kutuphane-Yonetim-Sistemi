@@ -28,6 +28,9 @@ public class Kullanici {
     @Email(message = "Lütfen geçerli bir email adresi giriniz (Örn: ornek@mail.com).")
     private String email;
 
+    @Column(name = "reset_token")
+    private String resetToken;
+    
     @Column(name = "sifre", nullable = false)
     private String sifre;
 

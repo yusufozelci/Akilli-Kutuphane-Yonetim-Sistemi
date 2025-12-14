@@ -8,5 +8,10 @@ public interface KullaniciService {
     Kullanici getById(int id);
     Kullanici save(Kullanici kullanici);
     Kullanici update(Kullanici kullanici);
+    void sifreSifirlamaKoduGonder(String email);
+    void sifreyiGuncelle(String token, String yeniSifre);
+    boolean tokenGecerliMi(String token);
+    void adminSifreGuncelle(int id, String yeniSifre);
+    boolean kullaniciKendiSifresiniGuncelle(String email, String eskiSifre, String yeniSifre);
     void deleteById(int id);
 }

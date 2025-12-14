@@ -31,8 +31,8 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/css/**", "/js/**", "/images/**", "/webjars/**").permitAll()
                         .requestMatchers("/login", "/api/auth/**").permitAll()
+                        .requestMatchers("/sifremi-unuttum", "/token-gir", "/token-kontrol", "/yeni-sifre", "/sifre-degis").permitAll()
                         .requestMatchers("/yazarlar/sil/**", "/yazarlar/kaydet", "/yazarlar/duzenle/**").hasAuthority("ADMIN")
                         .requestMatchers("/kitaplar/sil/**", "/kitaplar/kaydet", "/kitaplar/duzenle/**").hasAuthority("ADMIN")
                         .requestMatchers("/kullanicilar/sil/**", "/kullanicilar/kaydet", "/kullanicilar/duzenle/**").hasAuthority("ADMIN")

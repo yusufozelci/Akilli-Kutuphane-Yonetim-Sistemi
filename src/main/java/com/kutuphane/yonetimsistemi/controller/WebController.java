@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import java.security.Principal;
 import java.util.List;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -109,14 +110,13 @@ public class WebController {
             model.addAttribute("kitapListesi", kitapService.findAll());
             model.addAttribute("tumYazarlar", yazarService.findAll());
             model.addAttribute("tumKategoriler", kategoriService.findAll());
-            model.addAttribute("keyword", null); // Arama kutusu hata vermesin diye
+            model.addAttribute("keyword", null);
 
             return "kitaplar";
         }
         try {
              kitapService.save(kitap);
         } catch (Exception e) {
-            // Eğer bizim kontrolümüzden kaçan bir veritabanı hatası olursa buraya düşer
             model.addAttribute("hataMesaji", "Beklenmedik bir hata oluştu: " + e.getMessage());
             model.addAttribute("kitapListesi", kitapService.findAll());
             model.addAttribute("tumYazarlar", yazarService.findAll());
@@ -198,6 +198,13 @@ public class WebController {
         return "kullanicilar";
     }
 
+    @PostMapping("/kullanicilar/admin-sifre-guncelle")
+    public String adminSifreGuncelle(@RequestParam("id") int id,
+                                     @RequestParam("yeniSifre") String yeniSifre) {
+        kullaniciService.adminSifreGuncelle(id, yeniSifre);
+        return "redirect:/kullanicilar?msg=sifreGuncellendi";
+    }
+
     @GetMapping("/kategoriler")
     public String kategorileriListele(Model model) {
         model.addAttribute("kategoriListesi", kategoriService.findAll());
@@ -262,5 +269,88 @@ public class WebController {
     public String ogrenciIadeEt(@PathVariable Integer oduncId) {
         oduncAlmaService.kitapIadeEt(oduncId);
         return "redirect:/";
+    }
+
+    @GetMapping("/sifremi-unuttum")
+    public String sifremiUnuttumSayfasi() {
+        return "sifremi_unuttum";
+    }
+
+    @PostMapping("/sifremi-unuttum")
+    public String sifremiUnuttumIslemi(@RequestParam("email") String email, Model model) {
+        try {
+            kullaniciService.sifreSifirlamaKoduGonder(email);
+            return "redirect:/token-gir";
+        } catch (RuntimeException e) {
+            model.addAttribute("hata", e.getMessage());
+            return "sifremi_unuttum";
+        }
+    }
+
+    @GetMapping("/token-gir")
+    public String tokenGirSayfasi() {
+        return "token_gir";
+    }
+
+    @PostMapping("/token-kontrol")
+    public String tokenKontrolIslemi(@RequestParam("token") String token, Model model) {
+        if (kullaniciService.tokenGecerliMi(token)) {
+            return "redirect:/yeni-sifre?token=" + token;
+        } else {
+            model.addAttribute("hata", "Girdiğiniz kod hatalı veya geçersiz!");
+            return "token_gir";
+        }
+    }
+
+    @GetMapping("/yeni-sifre")
+    public String yeniSifreSayfasi(@RequestParam("token") String token, Model model) {
+        model.addAttribute("token", token);
+        return "yeni_sifre";
+    }
+
+    @PostMapping("/sifre-degis")
+    public String sifreDegisIslemi(@RequestParam("token") String token,
+                                   @RequestParam("sifre1") String sifre1,
+                                   @RequestParam("sifre2") String sifre2,
+                                   Model model) {
+        if (!sifre1.equals(sifre2)) {
+            model.addAttribute("hata", "Şifreler birbiriyle uyuşmuyor!");
+            model.addAttribute("token", token);
+            return "yeni_sifre";
+        }
+
+        try {
+            kullaniciService.sifreyiGuncelle(token, sifre1);
+            return "redirect:/login?sifreDegisti=true";
+        } catch (RuntimeException e) {
+            model.addAttribute("hata", e.getMessage());
+            model.addAttribute("token", token);
+            return "yeni_sifre";
+        }
+    }
+    @GetMapping("/profil/sifre-degistir")
+    public String profilSifreDegistirSayfasi() {
+        return "profil_sifre_degistir";
+    }
+
+    @PostMapping("/profil/sifre-guncelle")
+    public String profilSifreGuncelle(Principal principal,
+                                      @RequestParam("eskiSifre") String eskiSifre,
+                                      @RequestParam("yeniSifre") String yeniSifre,
+                                      @RequestParam("yeniSifreTekrar") String yeniSifreTekrar,
+                                      Model model) {
+
+        if (!yeniSifre.equals(yeniSifreTekrar)) {
+            model.addAttribute("hata", "Yeni şifreler birbiriyle uyuşmuyor!");
+            return "profil_sifre_degistir";
+        }
+        boolean sonuc = kullaniciService.kullaniciKendiSifresiniGuncelle(principal.getName(), eskiSifre, yeniSifre);
+
+        if (sonuc) {
+            return "redirect:/profil/sifre-degistir?basarili=true";
+        } else {
+            model.addAttribute("hata", "Mevcut şifrenizi yanlış girdiniz!");
+            return "profil_sifre_degistir";
+        }
     }
 }
