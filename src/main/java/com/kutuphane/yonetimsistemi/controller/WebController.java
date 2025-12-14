@@ -3,9 +3,11 @@ package com.kutuphane.yonetimsistemi.controller;
 import com.kutuphane.yonetimsistemi.repository.KullaniciRepository;
 import com.kutuphane.yonetimsistemi.entity.*;
 import com.kutuphane.yonetimsistemi.service.*;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -95,8 +97,33 @@ public class WebController {
     }
 
     @PostMapping("/kitaplar/kaydet")
-    public String kitapKaydet(@ModelAttribute("yeniKitap") Kitap kitap) {
-        kitapService.save(kitap);
+    public String kitapKaydet(@Valid @ModelAttribute("yeniKitap") Kitap kitap,
+                              BindingResult bindingResult,
+                              Model model) {
+
+        if (kitap.getId() == null && kitapService.isbnVarMi(kitap.getIsbn())) {
+            bindingResult.rejectValue("isbn", "error.kitap", "Bu ISBN numarası sistemde zaten kayıtlı!");
+        }
+
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("kitapListesi", kitapService.findAll());
+            model.addAttribute("tumYazarlar", yazarService.findAll());
+            model.addAttribute("tumKategoriler", kategoriService.findAll());
+            model.addAttribute("keyword", null); // Arama kutusu hata vermesin diye
+
+            return "kitaplar";
+        }
+        try {
+             kitapService.save(kitap);
+        } catch (Exception e) {
+            // Eğer bizim kontrolümüzden kaçan bir veritabanı hatası olursa buraya düşer
+            model.addAttribute("hataMesaji", "Beklenmedik bir hata oluştu: " + e.getMessage());
+            model.addAttribute("kitapListesi", kitapService.findAll());
+            model.addAttribute("tumYazarlar", yazarService.findAll());
+            model.addAttribute("tumKategoriler", kategoriService.findAll());
+            return "kitaplar";
+        }
+
         return "redirect:/kitaplar";
     }
 

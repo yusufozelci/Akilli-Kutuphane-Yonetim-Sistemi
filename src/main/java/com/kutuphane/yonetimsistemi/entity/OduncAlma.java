@@ -7,7 +7,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "OduncAlma")
+@Table(name = "Oduncalma")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -24,7 +24,6 @@ public class OduncAlma {
     @ManyToOne
     @JoinColumn(name = "kitap_id", nullable = false)
     private Kitap kitap;
-
 
     @Column(name = "odunc_alma_tarihi", nullable = false)
     private LocalDateTime oduncAlmaTarihi;

@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 @Entity
 @Table(name = "Kullanicilar")
 @Data
@@ -17,10 +19,15 @@ public class Kullanici {
 
     @Column(name = "ad", nullable = false)
     private String ad;
+
     @Column(name = "soyad", nullable = false)
     private String soyad;
-    @Column(name = "email", nullable = false , unique = true)
+
+    @Column(name = "email", length = 100, nullable = false, unique = true)
+    @NotBlank(message = "Email alanı boş bırakılamaz.")
+    @Email(message = "Lütfen geçerli bir email adresi giriniz (Örn: ornek@mail.com).")
     private String email;
+
     @Column(name = "sifre", nullable = false)
     private String sifre;
 

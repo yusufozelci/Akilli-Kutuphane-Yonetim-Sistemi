@@ -42,4 +42,9 @@ public class KitapServiceImpl implements KitapService {
         }
         return kitapRepository.findAll();
     }
+
+    @Override
+    public boolean isbnVarMi(String isbn) {
+        return kitapRepository.existsByIsbn(isbn);
+    }
 }

@@ -78,12 +78,34 @@
                             <input type="text" class="form-control" th:field="*{kitapAdi}" required>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">ISBN</label>
-                            <input type="text" class="form-control" th:field="*{isbn}">
+                            <label>ISBN Numarası:</label>
+                            <input type="text"
+                                   th:field="*{isbn}"
+                                   class="form-control"
+                                   maxlength="13"
+                                   placeholder="13 haneli ISBN" />
+
+                            <div th:if="${#fields.hasErrors('isbn')}"
+                                 th:errors="*{isbn}"
+                                 class="text-danger"
+                                 style="color: red; margin-top: 5px;">
+                            </div>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">Yayın Yılı</label>
-                            <input type="number" class="form-control" th:field="*{yayinYili}">
+                            <label>Yayın Yılı</label>
+
+                            <input type="number"
+                                   th:field="*{yayinYili}"
+                                   class="form-control"
+                                   max="2099"
+                                   oninput="if(this.value.length > 4) this.value = this.value.slice(0, 4);" />
+
+                            <div th:if="${#fields.hasErrors('yayinYili')}"
+                                 th:errors="*{yayinYili}"
+                                 class="text-danger"
+                                 style="color: red; margin-top: 5px;">
+                            </div>
+                            <div th:if="${#fields.hasErrors('yayinYili')}" th:errors="*{yayinYili}" style="color: red;"></div>
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Stok Adedi</label>

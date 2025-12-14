@@ -7,5 +7,6 @@ public interface KitapService {
     Kitap getById(int id);
     Kitap save(Kitap kitap);
     List<Kitap> search(String keyword);
+    boolean isbnVarMi(String isbn);
     void deleteById(int id);
 }
