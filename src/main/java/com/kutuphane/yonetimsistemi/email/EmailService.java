@@ -41,4 +41,49 @@ public class EmailService {
             System.err.println("E-posta gönderme hatası: " + e.getMessage());
         }
     }
+
+    public void sifreSifirlamaMailiGonder(String aliciEmail, String ad, String token) {
+        SimpleMailMessage message = new SimpleMailMessage();
+
+        message.setFrom(gonderenAdresi);
+        message.setTo(aliciEmail);
+        message.setSubject("Şifre Sıfırlama Kodu");
+
+        String metin = "Merhaba " + ad + ",\n\n"
+                + "Şifrenizi sıfırlamak için gereken kod: " + token + "\n\n"
+                + "Bu kodu kimseyle paylaşmayınız.\n\n"
+                + "İyi günler dileriz.";
+
+        message.setText(metin);
+
+        try {
+            mailSender.send(message);
+            System.out.println("Sıfırlama maili gönderildi: " + aliciEmail);
+        } catch (Exception e) {
+            System.err.println("E-posta gönderme hatası: " + e.getMessage());
+        }
+    }
+
+    public void sifreDegistiBilgilendirmesi(String aliciEmail, String ad) {
+        SimpleMailMessage message = new SimpleMailMessage();
+
+        message.setFrom(gonderenAdresi);
+        message.setTo(aliciEmail);
+        message.setSubject("Hesap Güvenliği: Şifreniz Değiştirildi");
+
+        String metin = "Merhaba " + ad + ",\n\n"
+                + "Kütüphane hesabınızın şifresi az önce değiştirilmiştir.\n"
+                + "Eğer bu işlemi siz yaptıysanız bu maili dikkate almayınız.\n\n"
+                + "Eğer şifrenizi siz değiştirmediyseniz, hesabınız tehlikede olabilir. Lütfen hemen yönetimle iletişime geçiniz.\n\n"
+                + "Saygılarımızla,\nAkıllı Kütüphane Yönetimi";
+
+        message.setText(metin);
+
+        try {
+            mailSender.send(message);
+            System.out.println("Bilgilendirme maili gönderildi: " + aliciEmail);
+        } catch (Exception e) {
+            System.err.println("E-posta gönderme hatası: " + e.getMessage());
+        }
+    }
 }

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import java.security.Principal;
 import java.util.List;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequiredArgsConstructor
@@ -200,9 +201,15 @@ public class WebController {
 
     @PostMapping("/kullanicilar/admin-sifre-guncelle")
     public String adminSifreGuncelle(@RequestParam("id") int id,
-                                     @RequestParam("yeniSifre") String yeniSifre) {
-        kullaniciService.adminSifreGuncelle(id, yeniSifre);
-        return "redirect:/kullanicilar?msg=sifreGuncellendi";
+                                     @RequestParam("yeniSifre") String yeniSifre,
+                                     RedirectAttributes redirectAttributes) {
+        try {
+            kullaniciService.adminSifreGuncelle(id, yeniSifre);
+            redirectAttributes.addFlashAttribute("basarili", "Şifre başarıyla güncellendi.");
+        } catch (RuntimeException e) {
+            redirectAttributes.addFlashAttribute("hata", e.getMessage());
+        }
+        return "redirect:/kullanicilar";
     }
 
     @GetMapping("/kategoriler")
